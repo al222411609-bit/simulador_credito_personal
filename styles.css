@@ -1,6 +1,6 @@
 body {
   font-family: Arial, Helvetica, sans-serif;
-  background-color: #cfe8fb;
+  background-color: #ecd9ed;
   color: #333;
   padding: 30px;
 }
@@ -10,7 +10,7 @@ body {
   background: #ffffff;
   margin: 0 auto;
   padding: 25px;
-  border: 1px solid #b3d4f0;
+  border: 1px solid #f0cef4;
 }
 
 .logo-texto {
@@ -46,13 +46,13 @@ label {
 input, select, button {
   width: 100%;
   padding: 8px;
-  border: 1px solid #b0b0b0;
+  border: 1px solid #d696d1;
   font-size: 14px;
 }
 
 button {
   margin-top: 15px;
-  background-color: #4f8ef7;
+  background-color: #f74ff4;
   color: white;
   font-weight: bold;
   cursor: pointer;
@@ -61,7 +61,7 @@ button {
 }
 
 button:hover {
-  background-color: #3d7ce8;
+  background-color: #a53b7c;
 }
 
 .resultado {
@@ -84,6 +84,6 @@ th, td {
 }
 
 th {
-  background-color: #4f8ef7;
+  background-color: #f74fca;
   color: white;
 }
