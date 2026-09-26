@@ -3,108 +3,61 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Banco YMMH · Simulador de Crédito Personal</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <title>Banco YMMH - Simulador de Crédito</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-  <main class="hoja">
+  <div class="container">
 
-    <header class="membrete">
-      <div class="marca">
-        <span class="marca__iniciales">YMMH</span>
-        <span class="marca__nombre">Banco YMMH</span>
-      </div>
-      <h1>Simulador de crédito personal</h1>
-      <p class="membrete__sub">Amortización a capital fijo, interés sobre saldo insoluto e IVA desglosado mes a mes.</p>
-    </header>
+    <div class="logo">
+      <span class="logo-siglas">YMMH</span>
+      <span class="logo-texto">Banco YMMH</span>
+    </div>
 
-    <form id="credit-form" class="formulario">
+    <h1>Simulador de Crédito Personal</h1>
+    <p class="descripcion">Calcula cuánto pagarías cada mes según el monto, la tasa y el plazo.</p>
 
-      <div class="campo campo--ancho">
-        <label for="nombre">Nombre completo</label>
-        <div class="campo__input">
-          <input type="text" id="nombre" placeholder="Ej. María Fernanda López" autocomplete="name" required>
-        </div>
-      </div>
+    <form id="credit-form">
+      <label for="nombre">Nombre completo</label>
+      <input type="text" id="nombre" placeholder="Escribe tu nombre" required>
 
-      <div class="campo">
-        <label for="monto">Monto del crédito</label>
-        <div class="campo__input">
-          <span class="campo__prefijo">$</span>
-          <input type="number" id="monto" value="150000" min="1000" step="500" required>
-        </div>
-      </div>
+      <label for="monto">Monto del crédito ($)</label>
+      <input type="number" id="monto" value="150000" required>
 
-      <div class="campo">
-        <label for="tasa">Tasa de interés anual</label>
-        <div class="campo__input">
-          <input type="number" id="tasa" value="34" min="0" step="0.1" required>
-          <span class="campo__sufijo">%</span>
-        </div>
-      </div>
+      <label for="tasa">Tasa de interés anual (%)</label>
+      <input type="number" id="tasa" value="34" step="0.1" required>
 
-      <div class="campo">
-        <label for="plazo">Plazo</label>
-        <div class="campo__input">
-          <select id="plazo">
-            <option value="12">12 meses</option>
-            <option value="24">24 meses</option>
-            <option value="36">36 meses</option>
-            <option value="48" selected>48 meses</option>
-            <option value="60">60 meses</option>
-          </select>
-        </div>
-      </div>
+      <label for="plazo">Plazo (meses)</label>
+      <select id="plazo">
+        <option value="12">12 meses</option>
+        <option value="24">24 meses</option>
+        <option value="36">36 meses</option>
+        <option value="48" selected>48 meses</option>
+        <option value="60">60 meses</option>
+      </select>
 
-      <button type="submit" id="btn-calcular" class="boton">Calcular pagos</button>
+      <button type="submit" id="btn-calcular">Calcular pagos</button>
     </form>
 
-    <section id="resultado" class="resultado" hidden>
+    <div id="resultado" class="resultado" hidden>
+      <h2 id="saludo"></h2>
 
-      <p class="resultado__saludo" id="saludo"></p>
+      <table id="tabla-amortizacion">
+        <thead>
+          <tr>
+            <th>Mes</th>
+            <th>Capital</th>
+            <th>Interés</th>
+            <th>IVA</th>
+            <th>Pago mensual</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
 
-      <div class="resumen">
-        <div class="resumen__dato">
-          <span class="resumen__etiqueta">Pago del primer mes</span>
-          <span class="resumen__valor" id="pago-inicial">—</span>
-        </div>
-        <div class="resumen__dato">
-          <span class="resumen__etiqueta">Pago del último mes</span>
-          <span class="resumen__valor" id="pago-final">—</span>
-        </div>
-        <div class="resumen__dato">
-          <span class="resumen__etiqueta">Total de intereses</span>
-          <span class="resumen__valor" id="total-interes">—</span>
-        </div>
-        <div class="resumen__dato">
-          <span class="resumen__etiqueta">Total a pagar</span>
-          <span class="resumen__valor resumen__valor--destacado" id="total-pagado">—</span>
-        </div>
-      </div>
-
-      <div class="tabla-envoltura">
-        <table id="tabla-amortizacion">
-          <thead>
-            <tr>
-              <th>Periodo</th>
-              <th>Saldo insoluto</th>
-              <th>Abono a capital</th>
-              <th>Interés</th>
-              <th>IVA</th>
-              <th>Pago mensual</th>
-              <th>Saldo final</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
-      </div>
-
-    </section>
-
-  </main>
+  </div>
 
   <script src="script.js"></script>
 </body>

@@ -1,11 +1,4 @@
-const IVA_TASA = 0.16;
-
-const formatoMoneda = new Intl.NumberFormat('es-MX', {
-  style: 'currency',
-  currency: 'MXN',
-});
-
-document.getElementById('credit-form').addEventListener('submit', (evento) => {
+document.getElementById('credit-form').addEventListener('submit', function (evento) {
   evento.preventDefault();
   procesarSimulacion();
 });
@@ -14,88 +7,44 @@ function procesarSimulacion() {
   const nombre = document.getElementById('nombre').value.trim();
   const monto = parseFloat(document.getElementById('monto').value);
   const tasaAnual = parseFloat(document.getElementById('tasa').value) / 100;
-  const plazoMeses = parseInt(document.getElementById('plazo').value, 10);
+  const plazoMeses = parseInt(document.getElementById('plazo').value);
+  const IVA = 0.16;
 
   if (!nombre) {
-    alert('Ingresa tu nombre completo para continuar.');
+    alert('Escribe tu nombre para continuar.');
     return;
   }
 
-  if (isNaN(monto) || isNaN(tasaAnual) || monto <= 0 || plazoMeses <= 0) {
-    alert('Ingresa parámetros numéricos válidos e intenta nuevamente.');
+  if (isNaN(monto) || isNaN(tasaAnual) || monto <= 0) {
+    alert('Ingresa datos numéricos válidos e intenta de nuevo.');
     return;
   }
 
-  const primerNombre = nombre.split(' ')[0];
-  document.getElementById('saludo').textContent =
-    `Resumen de tu simulación, ${primerNombre}:`;
-
-  const amortizacionCapital = monto / plazoMeses;
+  const abonoCapital = monto / plazoMeses;
   const tasaMensual = tasaAnual / 12;
+  let saldo = monto;
 
-  let saldoInsoluto = monto;
-  let totalInteres = 0;
-  let totalIva = 0;
-  let totalPagado = 0;
-  let pagoInicial = 0;
-  let pagoFinal = 0;
+  const tabla = document.querySelector('#tabla-amortizacion tbody');
+  tabla.innerHTML = '';
 
-  const filas = [];
+  for (let mes = 1; mes <= plazoMeses; mes++) {
+    const interes = saldo * tasaMensual;
+    const iva = interes * IVA;
+    const pagoMensual = abonoCapital + interes + iva;
 
-  for (let periodo = 1; periodo <= plazoMeses; periodo++) {
-    const interesDelPeriodo = saldoInsoluto * tasaMensual;
-    const ivaDelPeriodo = interesDelPeriodo * IVA_TASA;
-    const pagoMensual = amortizacionCapital + interesDelPeriodo + ivaDelPeriodo;
-    const saldoFinalPeriodo = Math.max(0, saldoInsoluto - amortizacionCapital);
+    const fila = document.createElement('tr');
+    fila.innerHTML = `
+      <td>${mes}</td>
+      <td>$${abonoCapital.toFixed(2)}</td>
+      <td>$${interes.toFixed(2)}</td>
+      <td>$${iva.toFixed(2)}</td>
+      <td>$${pagoMensual.toFixed(2)}</td>
+    `;
+    tabla.appendChild(fila);
 
-    filas.push({
-      periodo,
-      saldoInsoluto,
-      amortizacionCapital,
-      interesDelPeriodo,
-      ivaDelPeriodo,
-      pagoMensual,
-      saldoFinalPeriodo,
-    });
-
-    if (periodo === 1) pagoInicial = pagoMensual;
-    if (periodo === plazoMeses) pagoFinal = pagoMensual;
-
-    totalInteres += interesDelPeriodo;
-    totalIva += ivaDelPeriodo;
-    totalPagado += pagoMensual;
-
-    saldoInsoluto = saldoFinalPeriodo;
+    saldo -= abonoCapital;
   }
 
-  renderResumen({ pagoInicial, pagoFinal, totalInteres, totalPagado });
-  renderTabla(filas);
-
+  document.getElementById('saludo').textContent = 'Esto es lo que pagarías, ' + nombre.split(' ')[0] + ':';
   document.getElementById('resultado').hidden = false;
-}
-
-function renderResumen({ pagoInicial, pagoFinal, totalInteres, totalPagado }) {
-  document.getElementById('pago-inicial').textContent = formatoMoneda.format(pagoInicial);
-  document.getElementById('pago-final').textContent = formatoMoneda.format(pagoFinal);
-  document.getElementById('total-interes').textContent = formatoMoneda.format(totalInteres);
-  document.getElementById('total-pagado').textContent = formatoMoneda.format(totalPagado);
-}
-
-function renderTabla(filas) {
-  const cuerpo = document.querySelector('#tabla-amortizacion tbody');
-  cuerpo.innerHTML = '';
-
-  filas.forEach((fila) => {
-    const renglon = document.createElement('tr');
-    renglon.innerHTML = `
-      <td>${fila.periodo}</td>
-      <td>${formatoMoneda.format(fila.saldoInsoluto)}</td>
-      <td>${formatoMoneda.format(fila.amortizacionCapital)}</td>
-      <td>${formatoMoneda.format(fila.interesDelPeriodo)}</td>
-      <td>${formatoMoneda.format(fila.ivaDelPeriodo)}</td>
-      <td>${formatoMoneda.format(fila.pagoMensual)}</td>
-      <td>${formatoMoneda.format(fila.saldoFinalPeriodo)}</td>
-    `;
-    cuerpo.appendChild(renglon);
-  });
 }
